@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Sum, Max
+from django.db.models import Sum
 from newsportal.resources import CATEGORY_NAME
 
 
@@ -14,8 +14,6 @@ class Author(models.Model):
         rating_comment_post = Post.objects.filter(author=self).aggregate(sum=Sum('rating'))['sum']
         self.sum_rating = rating_post_author + rating_comment + rating_comment_post
         self.save()
-
-        # return f'{rating_post_author}  {rating_comment}   {rating_comment_post}'
 
 
 class Category(models.Model):
