@@ -29,6 +29,9 @@ class Post(models.Model):
     post_text = models.TextField()
     rating = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.header_news},{self.post_text} '
+
     def add_like(self):
         self.rating += 1
         self.save()
@@ -50,6 +53,9 @@ class Comment(models.Model):
     comment_text = models.TextField()
     comment_date = models.DateTimeField(auto_now_add=True)
     comment_rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.comment_text.title()
 
     def add_like(self):
         self.comment_rating += 1
