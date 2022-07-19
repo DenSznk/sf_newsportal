@@ -1,0 +1,40 @@
+{% extends 'newsportal/default.html' %}
+ 
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+<h1>All Posts</h1>
+   <hr>
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+   <h3>{{ posts|length }}</h3>
+    {% if posts %}
+       <table>
+           <tr>
+               <td><h3>Header</h3></td>
+               <td><h3>Description</h3></td>
+               <td><h3>Category</h3></td>
+               <td><h3>Date</h3></td>
+               <td><h3>Author</h3></td>
+           </tr>
+
+           {% for post in posts %}
+           <tr>
+               <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+                от переменных в Python. Здесь также можно получать доступ к
+                полям объекта модели. Например, здесь мы выводим имя,
+                в следующем столбце описание, и т.д.  -->
+               <td>{{ post.header_news }}</td>
+               <td>{{ post.post_text | truncatewords:20  }}</td>
+               <td>{{ post.choice_category }}</td>
+               <td>{{ post.date_time_auto| date:'M d Y' }}</td>
+               <td>{{ post.author.user.username }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>No posts yet.</h2>
+   {% endif %}
+{% endblock content %}

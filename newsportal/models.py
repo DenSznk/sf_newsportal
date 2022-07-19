@@ -30,7 +30,7 @@ class Post(models.Model):
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.header_news},{self.post_text} '
+        return f'{self.header_news}.  {self.post_text} '
 
     def add_like(self):
         self.rating += 1

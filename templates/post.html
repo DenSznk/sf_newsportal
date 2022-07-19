@@ -1,11 +1,28 @@
 {% extends 'newsportal/default.html' %}
- 
+{% load poll_extras %}
 {% block title %}
-Posts
+Post
 {% endblock title %}
- 
-<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<h1>All Posts</h1>
-{{ posts }}
-{% endblock content %}
+
+<h1> Post: </h1>
+<hr>
+<h3>{{ time_now|date:'M d Y' }}</h3>
+<table>
+    <tr>
+        <td><h3>Header</h3></td>
+        <td><h3>Date</h3></td>
+        <td><h3>Description</h3></td>
+        <td><h3>Category</h3></td>
+        <td><h3>Author</h3></td>
+    </tr>
+    <tr>
+        <td><h3>{{ post.header_news| upper }}</h3></td>
+        <td><h3>{{ post.date_time_auto| date:'M d Y' }}</h3></td>
+        <td>{{ post.post_text| censor }}</td>
+        <td><h3>{{ post.choice_category }}</h3></td>
+        <td><h3>{{ post.author.user.username }}</h3></td>
+    </tr>
+</table>
+
+    {% endblock content %}
