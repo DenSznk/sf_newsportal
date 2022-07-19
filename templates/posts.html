@@ -1,5 +1,5 @@
 {% extends 'newsportal/default.html' %}
- 
+{% load poll_extras %}
 {% block title %}
 Posts
 {% endblock title %}
@@ -26,7 +26,7 @@ Posts
                 полям объекта модели. Например, здесь мы выводим имя,
                 в следующем столбце описание, и т.д.  -->
                <td>{{ post.header_news }}</td>
-               <td>{{ post.post_text | truncatewords:20  }}</td>
+               <td>{{ post.post_text | truncatewords:20 | censor }}</td>
                <td>{{ post.choice_category }}</td>
                <td>{{ post.date_time_auto| date:'M d Y' }}</td>
                <td>{{ post.author.user.username }}</td>
