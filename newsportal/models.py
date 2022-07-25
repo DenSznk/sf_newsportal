@@ -1,12 +1,17 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
+
 from newsportal.resources import CATEGORY_NAME
 
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
     def update_rating(self):
         rating_post_author = self.post_set.all().aggregate(sum=Sum('rating') * 3)['sum']
@@ -18,6 +23,9 @@ class Author(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=155, unique=True)
+
+    def __str__(self):
+        return self.category_name
 
 
 class Post(models.Model):
@@ -45,6 +53,9 @@ class Post(models.Model):
         if len(preview) > 124:
             preview += '...'
         return preview
+
+    def get_absolute_url(self):
+        return reverse('post_list')
 
 
 class Comment(models.Model):

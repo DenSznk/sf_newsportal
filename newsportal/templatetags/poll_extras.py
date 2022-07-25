@@ -1,5 +1,6 @@
 from django import template
 
+
 register = template.Library()
 
 bad_words = ['some_bad_word', 'another_bad_word']
@@ -17,3 +18,9 @@ def censor(value):
     return censored_value
 
 
+@register.simple_tag(takes_context=True)
+def url_replace(context, **kwargs):
+    d = context['request'].GET.copy()
+    for k, v in kwargs.items():
+        d[k] = v
+    return d.urlencode()

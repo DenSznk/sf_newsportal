@@ -2,16 +2,12 @@
 --------------------------
 Создать двух пользователей (с помощью метода User.objects.create_user('username')).
 >>> User.objects.create_user('User1')
->>> user1.save()
 >>> User.objects.create_user('User2')
->>> user2.save()
 --------------------------
 
 Создать два объекта модели Author, связанные с пользователями.
 >>> author1 = Author.objects.create(user_id = 1)
-author1.save()
 >>> author2 = Author.objects.create(user_id = 2)
-author2.save()
 --------------------------
 
 Добавить 4 категории в модель Category.
@@ -55,20 +51,15 @@ post4.category.add(Category.objects.get(id=2))
 
 >>> comment1 = Comment.objects.create(user_one_to_many = user1,
 post_one_to_many = post1, comment_text = 'Comment1 text')
->>> comment1.save()
 
 >>> comment2 = Comment.objects.create(user_one_to_many = user1,
 post_one_to_many = post2, comment_text = 'Comment1 user1 post2')
->>> comment2.save()
 
 >>> comment3 = Comment.objects.create(user_one_to_many = user2,
 post_one_to_many = post2, comment_text = 'Comment3 user2 post2')
->>> comment3.save()
 
 >>> comment4 = Comment.objects.create(user_one_to_many = user2,
 post_one_to_many = post1, comment_text = 'Comment4 user2 post1')
->>> comment4.save()
- user1= User.objects.get(author=1)
  ----------------------
 
  Применяя функции like() и dislike() к статьям/новостям и комментариям,
@@ -102,7 +93,7 @@ Author.objects.get(user_id=2).update_rating()
 Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей
 статьи, основываясь на лайках/дислайках к этой статье.
 
- Post.objects.all().order_by('-rating').values('author_id', 'post_text',
+ Post.objects.all().order_by('-rating').values('author_id__username', 'post_text',
  'rating', 'header_news', 'date_time_auto')[0]
 --------------------------
 
