@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from newsportal.views import index
+from newsportal.views import index, logging
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('newsportal.urls')),
-    path('', index)
-
+    path('', index),
+    path('accounts/login/', logging)
 ]

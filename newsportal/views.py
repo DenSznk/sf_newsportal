@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -12,6 +13,10 @@ from newsportal.models import Post
 
 def index(request):
     return HttpResponse('<h1> main Page </h1>')
+
+
+def logging(request):
+    return HttpResponse('<h1> Log here bitch</h1>')
 
 
 class PostSearch(ListView):
@@ -63,7 +68,7 @@ def create_post(request):
     return render(request, 'post_edit.html', {'form': form})
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
