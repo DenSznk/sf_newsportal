@@ -21,6 +21,7 @@ from newsportal.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('newsportal.urls')),
-    path('', index)
+    path('', index),
+    path('accounts/', include('allauth.urls')),
 
 ]

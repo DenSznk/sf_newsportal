@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -63,19 +64,19 @@ def create_post(request):
     return render(request, 'post_edit.html', {'form': form})
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
 
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_create')
 
 
-class CreatePost(CreateView):
+class CreatePost(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
