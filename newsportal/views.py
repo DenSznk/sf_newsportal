@@ -102,6 +102,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
+
 @login_required
 def upgrade_me(request):
     user = request.user
