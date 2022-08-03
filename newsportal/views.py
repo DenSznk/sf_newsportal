@@ -1,13 +1,15 @@
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
 
 from newsportal.filters import PostFilter
-from newsportal.forms import PostForm, SearchForm
+from newsportal.forms import PostForm
 from newsportal.models import Post
 
 
@@ -89,3 +91,22 @@ class CreatePost(LoginRequiredMixin, CreateView):
             post = form.save(commit=False)
             post.choice_category = 'NE'
         return super().form_valid(form)
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'newsportal/posts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    author_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        author_group.user_set.add(user)
+    return redirect('/posts/')
+

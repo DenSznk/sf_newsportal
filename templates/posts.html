@@ -8,8 +8,6 @@ Posts
 
 <h1>All Posts</h1>
 
-
-
     <hr>
    <h3>{{ time_now|date:'M d Y' }}</h3>
    <h3>{{ posts|length }}</h3>
@@ -58,6 +56,11 @@ Posts
    {% endif %}
 
 
+
+
+   {% if is_not_author %}
+      <li><button> <a href="/upgrade/"> Got authors!</a> </button></li>
+   {% endif %}
 
 
 {% endblock content %}
