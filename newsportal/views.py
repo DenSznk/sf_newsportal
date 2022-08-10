@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from allauth.account.views import login
+from allauth.socialaccount.providers.openid.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
@@ -10,7 +12,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView, C
 
 from newsportal.filters import PostFilter
 from newsportal.forms import PostForm
-from newsportal.models import Post
+from newsportal.models import Post, Author
 
 
 def index(request):
@@ -102,12 +104,13 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
-
 @login_required
 def upgrade_me(request):
     user = request.user
     author_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         author_group.user_set.add(user)
-    return redirect('/posts/')
+        Author.objects.create(user=user)
+    return redirect('/')
+
 

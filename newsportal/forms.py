@@ -6,6 +6,8 @@ from .models import Post
 
 
 class PostForm(forms.ModelForm):
+    '''Форма создания поста'''
+
     class Meta:
         model = Post
         fields = [
@@ -14,6 +16,9 @@ class PostForm(forms.ModelForm):
             'post_text',
             'author',
         ]
+
+
+
 
 
 class DateInput(forms.DateField):
@@ -25,9 +30,19 @@ class SearchForm(forms.Form):
 
 
 class BasicSignupForm(SignupForm):
+    '''Add user to common group'''
 
     def save(self, request):
         user = super(BasicSignupForm, self).save(request)
+        basic_group = Group.objects.get(name='common')
+        basic_group.user_set.add(user)
+        return user
+
+
+class BasicSignupdForm():
+
+    def save(self, request):
+        user = super(BasicSignupdForm, self).save(request)
         basic_group = Group.objects.get(name='common')
         basic_group.user_set.add(user)
         return user

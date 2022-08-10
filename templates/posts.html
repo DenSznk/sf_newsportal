@@ -1,9 +1,11 @@
 {% extends 'newsportal/default.html' %}
 {% load poll_extras %}
 {% block title %}
+
 Posts
 {% endblock title %}
-
+{% url 'logout' %}
+{% url 'upgrade' %}
 {% block content %}
 
 <h1>All Posts</h1>
@@ -54,13 +56,5 @@ Posts
            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
        {% endif %}
    {% endif %}
-
-
-
-
-   {% if is_not_author %}
-      <li><button> <a href="/upgrade/"> Got authors!</a> </button></li>
-   {% endif %}
-
 
 {% endblock content %}
