@@ -16,9 +16,25 @@ class PostForm(forms.ModelForm):
             'post_text',
             'author',
         ]
+        widgets = {
+            'header_news': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input Header'}),
+            'post_text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Input Post'}),
+            'author': forms.Select(),
+        }
 
 
-
+class EditForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = [
+            'category',
+            'header_news',
+            'post_text',
+        ]
+        widgets = {
+            'header_news': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input Header'}),
+            'post_text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Input Post'}),
+        }
 
 
 class DateInput(forms.DateField):
@@ -38,11 +54,11 @@ class BasicSignupForm(SignupForm):
         basic_group.user_set.add(user)
         return user
 
-
-class BasicSignupdForm():
-
-    def save(self, request):
-        user = super(BasicSignupdForm, self).save(request)
-        basic_group = Group.objects.get(name='common')
-        basic_group.user_set.add(user)
-        return user
+# class BasicSignupdForm():
+#
+#     def save(self, request):
+#         user = super(BasicSignupdForm, self).save(request)
+#         basic_group = Group.objects.get(name='common')
+#         basic_group.user_set.add(user)
+#
+#         return user

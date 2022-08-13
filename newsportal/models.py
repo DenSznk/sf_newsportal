@@ -38,7 +38,7 @@ class Post(models.Model):
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.header_news}.  {self.post_text} '
+        return f'{self.header_news}.  {self.post_text}, {self.category} '
 
     def add_like(self):
         self.rating += 1
@@ -55,7 +55,7 @@ class Post(models.Model):
         return preview
 
     def get_absolute_url(self):
-        return reverse('post_list')
+        return f'/posts/{self.id}'
 
 
 class Comment(models.Model):

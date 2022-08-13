@@ -10,51 +10,50 @@ Posts
 
 <h1>All Posts</h1>
 
-    <hr>
-   <h3>{{ time_now|date:'M d Y' }}</h3>
-   <h3>{{ posts|length }}</h3>
-    {% if posts %}
-       <table>
-           <tr>
-               <td><h3>Header</h3></td>
-               <td><h3>Description</h3></td>
-               <td><h3>Category</h3></td>
-               <td><h3>Date</h3></td>
-               <td><h3>Author</h3></td>
-           </tr>
+<hr>
+<h3>{{ time_now|date:'M d Y' }}</h3>
+<h3>{{ posts|length }}</h3>
+{% if posts %}
+<table>
+    <tr>
+        <td><h3>Header</h3></td>
+        <td><h3>Description</h3></td>
+        <td><h3>Category</h3></td>
+        <td><h3>Date</h3></td>
+        <td><h3>Author</h3></td>
+    </tr>
 
-           {% for post in posts %}
-           <tr>
-               <td>{{ post.header_news }}</td>
-               <td>{{ post.post_text | truncatewords:20 | censor }}</td>
-               <td>{{ post.choice_category }}</td>
-               <td>{{ post.date_time_auto| date:'M d Y' }}</td>
-               <td>{{ post.author.user.username }}</td>
-           </tr>
-           {% endfor %}
+    {% for post in posts %}
+    <tr>
+        <td><a href="{% url 'post_detail' post.pk %}">{{ post.header_news }}</a></td>
+        <td>{{ post.post_text | truncatewords:20 | censor }} -<small><a href="{% url 'post_edit' post.pk %}">Edit</a></small></td>
+        <td>{{ post.category }}</td>
+        <td>{{ post.date_time_auto| date:'M d Y' }}</td>
+        <td>{{ post.author.user.username }}</td>
+    </tr>
+    {% endfor %}
 
-       </table>
-   {% else %}
-       <h2>No posts yet.</h2>
-   {% endif %}
+</table>
+{% else %}
+<h2>No posts yet.</h2>
+{% endif %}
 
 
+{% if page_obj.has_previous %}
+<a href="?page=1">1</a>
+{% if page_obj.previous_page_number != 1 %}
+...
+<a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
+{% endif %}
+{{ page_obj.number }}
 
-    {% if page_obj.has_previous %}
-       <a href="?page=1">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ...
-           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-    {% endif %}
-    {{ page_obj.number }}
-
-   {% if page_obj.has_next %}
-       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+{% if paginator.num_pages != page_obj.next_page_number %}
+...
+<a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+{% endif %}
+{% endif %}
 
 {% endblock content %}

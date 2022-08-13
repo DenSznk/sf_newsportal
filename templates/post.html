@@ -1,14 +1,19 @@
 {% extends 'newsportal/default.html' %}
 {% load poll_extras %}
+
+
 {% block title %}
-Post
+{{ post.header_news }}
 {% endblock title %}
+
+
 {% block content %}
 
 <h1> Post: </h1>
 <hr>
 <h3>{{ time_now|date:'M d Y' }}</h3>
 <table>
+
     <tr>
         <td><h3>Header</h3></td>
         <td><h3>Date</h3></td>
@@ -22,7 +27,11 @@ Post
         <td>{{ post.post_text| censor }}</td>
         <td><h3>{{ post.choice_category }}</h3></td>
         <td><h3>{{ post.author.user.username }}</h3></td>
+
     </tr>
 </table>
-
+<br/>
+<small><a href="{% url 'post_edit' post.pk %} " class="btn btn-secondary" >Edit</a></small>
+<a href="{% url 'home' %}" class="btn btn-secondary">
+    Back</a>
     {% endblock content %}

@@ -4,8 +4,8 @@ from .views import PostListView, PostDetails, \
     PostUpdate, PostDelete, CreatePost, PostSearch, upgrade_me
 
 urlpatterns = [
-    path('', PostListView.as_view()),
-    path('<int:pk>', PostDetails.as_view()),
+    path('', PostListView.as_view(), name='home'),
+    path('<int:pk>', PostDetails.as_view(), name='post_detail'),
     path('news/search', PostSearch.as_view(), name='post_list'),
 
     path('create/news/', CreatePost.as_view(), name='post_create'),

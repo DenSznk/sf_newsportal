@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
 
 from newsportal.filters import PostFilter
-from newsportal.forms import PostForm
+from newsportal.forms import PostForm, EditForm
 from newsportal.models import Post, Author
 
 
@@ -69,7 +69,7 @@ def create_post(request):
 
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
-    form_class = PostForm
+    form_class = EditForm
     model = Post
     template_name = 'post_edit.html'
 
@@ -81,18 +81,30 @@ class PostDelete(LoginRequiredMixin, DeleteView):
 
 
 class CreatePost(LoginRequiredMixin, CreateView):
-    form_class = PostForm
     model = Post
+    form_class = PostForm
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
-        if self.request.path == '/posts/create/article/':
-            post = form.save(commit=False)
-            post.choice_category = 'AR'
-        else:
-            post = form.save(commit=False)
-            post.choice_category = 'NE'
+        user = self.request.user
+        post = form.save(commit=False)
+        post.author = Author.objects.get(user_id=user)
+        post.save()
         return super().form_valid(form)
+
+        # if self.request.path == '/posts/create/article/':
+        #     post = form.save(commit=False)
+        #     post.choice_category = 'AR'
+        #     post.author = self.request.user
+        #
+        #     self.object.save()
+        # else:
+        #
+        #     post = form.save(commit=False)
+        #     post.choice_category = 'NE'
+        #     post.author = self.request.user
+        #     self.object.save()
+        # return super().form_valid(form)
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -112,5 +124,3 @@ def upgrade_me(request):
         author_group.user_set.add(user)
         Author.objects.create(user=user)
     return redirect('/')
-
-
