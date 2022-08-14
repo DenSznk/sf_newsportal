@@ -86,10 +86,10 @@ class CreatePost(LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
-        author = self.request.user
-        self.obj = form.save(commit=False)
-        self.obj.user = Author.objects.get(user=author)
-        self.obj.save()
+        user = self.request.user
+        post = form.save(commit=False)
+        post.user = Author.objects.get(user_id=user)
+        post.save()
         return super().form_valid(form)
 
         # user = self.request.user

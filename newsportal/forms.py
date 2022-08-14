@@ -2,7 +2,7 @@ from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import Post
+from .models import Post, Author
 
 
 class PostForm(forms.ModelForm):
@@ -52,6 +52,15 @@ class BasicSignupForm(SignupForm):
         user = super(BasicSignupForm, self).save(request)
         basic_group = Group.objects.get(name='common')
         basic_group.user_set.add(user)
+        basic_group, _ = Group.objects.get_or_create(
+            defaults={
+                'name': 'author',
+
+            },
+            name='author',
+        )
+        basic_group.user_set.add(user)
+        Author.objects.create(user=user, raiting=0)
         return user
 
 # class BasicSignupdForm():
