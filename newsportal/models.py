@@ -1,13 +1,16 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
-from django.urls import reverse
 
 from newsportal.resources import CATEGORY_NAME
 
 
 class Author(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='author',
+    )
     rating = models.IntegerField(default=0)
 
     def __str__(self):

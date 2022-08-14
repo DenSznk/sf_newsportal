@@ -2,7 +2,7 @@ from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import Post
+from .models import Author, Post
 
 
 class PostForm(forms.ModelForm):
@@ -14,12 +14,10 @@ class PostForm(forms.ModelForm):
             'category',
             'header_news',
             'post_text',
-            # 'author',
         ]
         widgets = {
             'header_news': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input Header'}),
             'post_text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Input Post'}),
-            # 'author': forms.Select(),
         }
 
 
@@ -50,8 +48,14 @@ class BasicSignupForm(SignupForm):
 
     def save(self, request):
         user = super(BasicSignupForm, self).save(request)
-        basic_group = Group.objects.get(name='common')
+        basic_group, _ = Group.objects.get_or_create(
+            defaults={
+                'name': 'author',
+            },
+            name='author',
+        )
         basic_group.user_set.add(user)
+        Author.objects.create(user=user, rating=0)
         return user
 
 # class BasicSignupdForm():

@@ -1,13 +1,11 @@
 from datetime import datetime
 
-from allauth.account.views import login
-from allauth.socialaccount.providers.openid.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group, User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
 
 from newsportal.filters import PostFilter
@@ -86,31 +84,10 @@ class CreatePost(LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
-        author = self.request.user
-        self.obj = form.save(commit=False)
-        self.obj.user = Author.objects.get(user=author)
-        self.obj.save()
+        obj = form.save(commit=False)
+        obj.author_id = self.request.user.author.id
+        obj.save()
         return super().form_valid(form)
-
-        # user = self.request.user
-        # self.object = form.save(commit=False)
-        # self.object.post_author = Author.objects.get(author_user=user)
-        # self.object.save()
-        # return super().form_valid(form)
-
-        # if self.request.path == '/posts/create/article/':
-        #     post = form.save(commit=False)
-        #     post.choice_category = 'AR'
-        #     post.author = self.request.user
-        #
-        #     self.object.save()
-        # else:
-        #
-        #     post = form.save(commit=False)
-        #     post.choice_category = 'NE'
-        #     post.author = self.request.user
-        #     self.object.save()
-        # return super().form_valid(form)
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
