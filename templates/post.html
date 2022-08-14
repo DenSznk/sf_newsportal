@@ -31,7 +31,8 @@
     </tr>
 </table>
 <br/>
-<small><a href="{% url 'post_edit' post.pk %} " class="btn btn-secondary" >Edit</a></small>
+<small><a href="{% url 'post_edit' post.pk %}" class="btn btn-secondary" >Edit</a></small>
+<small><a href="{% url 'post_delete' post.pk %}" class="btn btn-secondary">Delete</a></small>
 <a href="{% url 'home' %}" class="btn btn-secondary">
     Back</a>
     {% endblock content %}

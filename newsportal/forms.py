@@ -14,12 +14,12 @@ class PostForm(forms.ModelForm):
             'category',
             'header_news',
             'post_text',
-            'author',
+            # 'author',
         ]
         widgets = {
             'header_news': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input Header'}),
             'post_text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Input Post'}),
-            'author': forms.Select(),
+            # 'author': forms.Select(),
         }
 
 

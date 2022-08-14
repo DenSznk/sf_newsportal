@@ -4,7 +4,7 @@ from allauth.account.views import login
 from allauth.socialaccount.providers.openid.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -77,7 +77,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('post_create')
+    success_url = reverse_lazy('home')
 
 
 class CreatePost(LoginRequiredMixin, CreateView):
@@ -86,11 +86,17 @@ class CreatePost(LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
-        user = self.request.user
-        post = form.save(commit=False)
-        post.author = Author.objects.get(user_id=user)
-        post.save()
+        author = self.request.user
+        self.obj = form.save(commit=False)
+        self.obj.user = Author.objects.get(user=author)
+        self.obj.save()
         return super().form_valid(form)
+
+        # user = self.request.user
+        # self.object = form.save(commit=False)
+        # self.object.post_author = Author.objects.get(author_user=user)
+        # self.object.save()
+        # return super().form_valid(form)
 
         # if self.request.path == '/posts/create/article/':
         #     post = form.save(commit=False)
