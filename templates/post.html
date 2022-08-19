@@ -9,24 +9,18 @@
 
 
 {% block content %}
-{{ post.category.category.category_name }}
-<h1> Post: </h1>
-<hr>
-<h3>{{ time_now|date:'M d Y' }}</h3>
+<h3>Chapter: {{ post.choice_category}}. {{ post.date_time_auto | date:'M d Y' }}</h3>
+<h3></h3>
 <table>
 
     <tr>
         <td><h3>Header</h3></td>
-        <td><h3>Date</h3></td>
         <td><h3>Description</h3></td>
-        <td><h3>Category</h3></td>
         <td><h3>Author</h3></td>
     </tr>
     <tr>
         <td>{{ post.header_news| title }}</td>
-        <td>{{ post.date_time_auto| date:'M d Y' }}</td>
         <td>{{ post.post_text| censor }}</td>
-        <td>{{ post.choice_category }}</td>
         <td>{{ post.author.user.username }}</td>
 
     </tr>
