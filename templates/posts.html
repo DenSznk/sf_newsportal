@@ -7,7 +7,6 @@ Posts
 {% url 'logout' %}
 {% url 'upgrade' %}
 {% block content %}
-
 <h1>All Posts</h1>
 
 <hr>
@@ -16,6 +15,7 @@ Posts
 {% if posts %}
 <table>
     <tr>
+  <tr>
         <td><h3>Header</h3></td>
         <td><h3>Description</h3></td>
         <td><h3>Category</h3></td>
@@ -24,11 +24,20 @@ Posts
     </tr>
 
     {% for post in posts %}
+        {{ request.user.username }}
+        {{ post.author.user.username }}
     <tr>
         <td><a href="{% url 'post_detail' post.pk %}">{{ post.header_news }}</a></td>
-        <td>{{ post.post_text | truncatewords:20 | censor }} -<small><a href="{% url 'post_edit' post.pk %}">Edit</a></small>
-            <small><a href="{% url 'post_delete' post.pk %}">Delete</a></small></td>
-        <td>{{ post.category }}</td>
+        <td>{{ post.post_text | truncatewords:20 | censor }}
+         {% if request.user.username == post.author.user.username %}
+            <small><a href="{% url 'post_edit' post.pk %}">(Edit)</a></small>
+            <small><a href="{% url 'post_delete' post.pk %}">(Delete)</a></small></td>
+         {% endif %}
+          {% if request.user.is_staff %}
+            <td><small><a href="{% url 'post_edit' post.pk %}">(Edit)</a></small>
+            <small><a href="{% url 'post_delete' post.pk %}">(Delete)</a></small></td>
+          {% endif %}
+        <td>{{ post.category.category_name }}</td>
         <td>{{ post.date_time_auto| date:'M d Y' }}</td>
         <td>{{ post.author.user.username }}</td>
     </tr>

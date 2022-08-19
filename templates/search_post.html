@@ -29,7 +29,7 @@ Posts
 
            {% for post in posts %}
            <tr>
-               <td>{{ post.header_news }}</td>
+               <td><a href="{% url 'post_detail' post.pk %}">{{ post.header_news }}</a></td>
                <td>{{ post.post_text | truncatewords:20 | censor }}</td>
                <td>{{ post.choice_category }}</td>
                <td>{{ post.date_time_auto| date:'M d Y' }}</td>

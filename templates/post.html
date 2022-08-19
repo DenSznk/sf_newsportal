@@ -4,11 +4,12 @@
 
 {% block title %}
 {{ post.header_news }}
+
 {% endblock title %}
 
 
 {% block content %}
-
+{{ post.category.category.category_name }}
 <h1> Post: </h1>
 <hr>
 <h3>{{ time_now|date:'M d Y' }}</h3>
@@ -22,17 +23,20 @@
         <td><h3>Author</h3></td>
     </tr>
     <tr>
-        <td><h3>{{ post.header_news| upper }}</h3></td>
-        <td><h3>{{ post.date_time_auto| date:'M d Y' }}</h3></td>
+        <td>{{ post.header_news| title }}</td>
+        <td>{{ post.date_time_auto| date:'M d Y' }}</td>
         <td>{{ post.post_text| censor }}</td>
-        <td><h3>{{ post.choice_category }}</h3></td>
-        <td><h3>{{ post.author.user.username }}</h3></td>
+        <td>{{ post.choice_category }}</td>
+        <td>{{ post.author.user.username }}</td>
 
     </tr>
 </table>
+
 <br/>
+{% if request.user.username == post.author.user.username %}
 <small><a href="{% url 'post_edit' post.pk %}" class="btn btn-secondary" >Edit</a></small>
 <small><a href="{% url 'post_delete' post.pk %}" class="btn btn-secondary">Delete</a></small>
+{% endif %}
 <a href="{% url 'home' %}" class="btn btn-secondary">
     Back</a>
     {% endblock content %}

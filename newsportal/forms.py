@@ -2,7 +2,7 @@ from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import Post, Author
+from .models import Post, Author, Comment
 
 
 class PostForm(forms.ModelForm):
@@ -55,3 +55,16 @@ class BasicSignupForm(SignupForm):
         Author.objects.create(user=user, rating=0)
         return user
 
+
+# class CommentForm(forms.ModelForm):
+#     class Meta:
+#         model = Comment
+#         fields = [
+#             'comment_text',
+#             'comment_date',
+#             'rating',
+#         ]
+#         widgets = {
+#             'comment_text': forms.Textarea(attrs={'class': 'form-control'})
+#
+#         }
