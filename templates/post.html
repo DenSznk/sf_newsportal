@@ -16,11 +16,13 @@
     <tr>
         <td><h3>Header</h3></td>
         <td><h3>Description</h3></td>
+        <td><h3>Category</h3></td>
         <td><h3>Author</h3></td>
     </tr>
     <tr>
         <td>{{ post.header_news| title }}</td>
         <td>{{ post.post_text| censor }}</td>
+        <td>{{ post.category_name }}</td>
         <td>{{ post.author.user.username }}</td>
 
     </tr>
