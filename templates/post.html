@@ -9,6 +9,9 @@
 
 
 {% block content %}
+
+
+
 <h3>Chapter: {{ post.choice_category}}. {{ post.date_time_auto | date:'M d Y' }}</h3>
 <h3></h3>
 <table>
@@ -22,7 +25,7 @@
     <tr>
         <td>{{ post.header_news| title }}</td>
         <td>{{ post.post_text| censor }}</td>
-        <td>{{ post.category_name }}</td>
+        <td>{{ post.category.all }}</td>
         <td>{{ post.author.user.username }}</td>
 
     </tr>

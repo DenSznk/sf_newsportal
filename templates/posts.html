@@ -37,11 +37,13 @@ Posts
             <td><small><a href="{% url 'post_edit' post.pk %}">(Edit)</a></small>
             <small><a href="{% url 'post_delete' post.pk %}">(Delete)</a></small></td>
           {% endif %}
-        <td>{{ post.category.category_name }}</td>
+        <td>{{ post.category.all }}</td>
         <td>{{ post.date_time_auto| date:'M d Y' }}</td>
         <td>{{ post.author.user.username }}</td>
     </tr>
     {% endfor %}
+
+
 
 </table>
 {% else %}

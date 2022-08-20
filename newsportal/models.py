@@ -23,6 +23,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=155, unique=True)
+    subscribers = models.ManyToManyField(User, through='UserCategory')
 
     def __str__(self):
         return self.category_name
@@ -38,7 +39,7 @@ class Post(models.Model):
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.header_news}.  {self.post_text}, {self.category} '
+        return f'{self.header_news}.  {self.post_text}, {self.category}  '
 
     def add_like(self):
         self.rating += 1
@@ -77,8 +78,11 @@ class Comment(models.Model):
         self.save()
 
 
+class UserCategory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+
 class PostCategory(models.Model):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-

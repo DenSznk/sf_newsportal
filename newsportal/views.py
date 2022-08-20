@@ -106,13 +106,12 @@ class CreatePost(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         if self.request.path == '/posts/create/article/':
             post = form.save(commit=False)
-            post.choice_category = 'Article'
+            post.choice_category = 'AR'
             post.author = Author.objects.get(user=self.request.user)
             post.save()
         else:
-
             post = form.save(commit=False)
-            post.choice_category = 'News'
+            post.choice_category = 'NE'
             post.author = Author.objects.get(user=self.request.user)
             post.save()
         return super().form_valid(form)
