@@ -57,12 +57,3 @@ class BasicSignupForm(SignupForm):
         basic_group.user_set.add(user)
         Author.objects.create(user=user, rating=0)
         return user
-
-# class BasicSignupdForm():
-#
-#     def save(self, request):
-#         user = super(BasicSignupdForm, self).save(request)
-#         basic_group = Group.objects.get(name='common')
-#         basic_group.user_set.add(user)
-#
-#         return user

@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -51,9 +51,15 @@ class PostListView(ListView):
 
 
 class PostDetails(DetailView):
-    model = Post
+    model: Post = Post
     template_name = 'post.html'
     context_object_name = 'post'
+
+    def get_object(self):
+        post = self.model.objects.filter(**self.kwargs).prefetch_related('tags').first()
+        if not post:
+            raise Http404()
+        return post
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -13,7 +13,6 @@
 <hr>
 <h3>{{ time_now|date:'M d Y' }}</h3>
 <table>
-
     <tr>
         <td><h3>Header</h3></td>
         <td><h3>Date</h3></td>
@@ -25,7 +24,11 @@
         <td><h3>{{ post.header_news| upper }}</h3></td>
         <td><h3>{{ post.date_time_auto| date:'M d Y' }}</h3></td>
         <td>{{ post.post_text| censor }}</td>
-        <td><h3>{{ post.type }}</h3></td>
+        <td>
+            {% for tag in post.tags.all %}
+                <p> {{ tag.name }} </p>
+            {% endfor %}
+        </td>
         <td><h3>{{ post.author.user.username }}</h3></td>
 
     </tr>
