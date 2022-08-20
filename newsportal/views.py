@@ -1,14 +1,19 @@
 from datetime import datetime
 from django.http import Http404
-from allauth.account.views import login
-from allauth.socialaccount.providers.openid.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group, User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import Group
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+    CreateView,
+    TemplateView,
+)
 
 from newsportal.filters import PostFilter
 from newsportal.forms import PostForm, EditForm
@@ -53,9 +58,15 @@ class PostListView(ListView):
 
 
 class PostDetails(DetailView):
-    model = Post
+    model: Post = Post
     template_name = 'post.html'
     context_object_name = 'post'
+
+    def get_object(self):
+        post = self.model.objects.filter(**self.kwargs).prefetch_related('tags').first()
+        if not post:
+            raise Http404()
+        return post
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,7 +82,6 @@ def create_post(request):
         if form.is_valid():
             form.save()
         return HttpResponseRedirect('/posts/')
-
     return render(request, 'post_edit.html', {'form': form})
 
 
@@ -104,6 +114,11 @@ class CreatePost(LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
+<<<<<<< HEAD
+        obj = form.save(commit=False)
+        obj.author_id = self.request.user.author.id
+        obj.save()
+=======
         if self.request.path == '/posts/create/article/':
             post = form.save(commit=False)
             post.choice_category = 'Article'
@@ -115,6 +130,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
             post.choice_category = 'News'
             post.author = Author.objects.get(user=self.request.user)
             post.save()
+>>>>>>> 59971675b942009ef7dcd5889afc34b9c33f7db6
         return super().form_valid(form)
 
 

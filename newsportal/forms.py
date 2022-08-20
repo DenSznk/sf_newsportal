@@ -2,7 +2,11 @@ from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.models import Group
 
+<<<<<<< HEAD
+from .models import Author, Post
+=======
 from .models import Post, Author, Comment
+>>>>>>> 59971675b942009ef7dcd5889afc34b9c33f7db6
 
 
 class PostForm(forms.ModelForm):
@@ -11,15 +15,13 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'category',
+            'tags',
             'header_news',
             'post_text',
-            # 'author',
         ]
         widgets = {
             'header_news': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input Header'}),
             'post_text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Input Post'}),
-            # 'author': forms.Select(),
         }
 
 
@@ -27,7 +29,7 @@ class EditForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'category',
+            'tags',
             'header_news',
             'post_text',
         ]
@@ -50,6 +52,17 @@ class BasicSignupForm(SignupForm):
 
     def save(self, request):
         user = super(BasicSignupForm, self).save(request)
+<<<<<<< HEAD
+        basic_group, _ = Group.objects.get_or_create(
+            defaults={
+                'name': 'author',
+            },
+            name='author',
+        )
+        basic_group.user_set.add(user)
+        Author.objects.create(user=user, rating=0)
+        return user
+=======
         common_group = Group.objects.get(name='common')
         common_group.user_set.add(user)
         Author.objects.create(user=user, rating=0)
@@ -68,3 +81,4 @@ class BasicSignupForm(SignupForm):
 #             'comment_text': forms.Textarea(attrs={'class': 'form-control'})
 #
 #         }
+>>>>>>> 59971675b942009ef7dcd5889afc34b9c33f7db6
