@@ -6,7 +6,11 @@ from newsportal.resources import CATEGORY_NAME
 
 
 class Author(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='author',
+    )
     rating = models.IntegerField(default=0)
 
     def __str__(self):

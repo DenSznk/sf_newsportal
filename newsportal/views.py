@@ -90,31 +90,10 @@ class CreatePost(LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
-        author = self.request.user
-        self.obj = form.save(commit=False)
-        self.obj.user = Author.objects.get(user=author)
-        self.obj.save()
+        obj = form.save(commit=False)
+        obj.author_id = self.request.user.author.id
+        obj.save()
         return super().form_valid(form)
-
-        # user = self.request.user
-        # self.object = form.save(commit=False)
-        # self.object.post_author = Author.objects.get(author_user=user)
-        # self.object.save()
-        # return super().form_valid(form)
-
-        # if self.request.path == '/posts/create/article/':
-        #     post = form.save(commit=False)
-        #     post.type = 'AR'
-        #     post.author = self.request.user
-        #
-        #     self.object.save()
-        # else:
-        #
-        #     post = form.save(commit=False)
-        #     post.type = 'NE'
-        #     post.author = self.request.user
-        #     self.object.save()
-        # return super().form_valid(form)
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
