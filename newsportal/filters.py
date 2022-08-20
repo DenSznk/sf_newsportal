@@ -10,8 +10,8 @@ class PostFilter(django_filters.FilterSet):
     class Meta:
         model = Post
         fields = {
-            'category': ['exact'],
-            'choice_category': ['exact'],
+            'tags': ['exact'],
+            'type': ['exact'],
             'rating': ['gt'],
 
         }

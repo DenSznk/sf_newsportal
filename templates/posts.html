@@ -28,7 +28,7 @@ Posts
         <td><a href="{% url 'post_detail' post.pk %}">{{ post.header_news }}</a></td>
         <td>{{ post.post_text | truncatewords:20 | censor }} -<small><a href="{% url 'post_edit' post.pk %}">Edit</a></small>
             <small><a href="{% url 'post_delete' post.pk %}">Delete</a></small></td>
-        <td>{{ post.category }}</td>
+        <td>{{ post.tags }}</td>
         <td>{{ post.date_time_auto| date:'M d Y' }}</td>
         <td>{{ post.author.user.username }}</td>
     </tr>

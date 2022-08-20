@@ -22,16 +22,16 @@
 --------------------------
 
 Добавить 2 статьи и 1 новость.
-Post.objects.create(author_id = 1, choice_category = 'NE', header_news =
+Post.objects.create(author_id = 1, type = 'NE', header_news =
 'Header for post1', post_text = 'Some text for post1')
 
-Post.objects.create(author_id = 1, choice_category = 'AR', header_news =
+Post.objects.create(author_id = 1, type = 'AR', header_news =
 'Header for post2', post_text = 'Some text for post2')
 
-Post.objects.create(author_id = 1, choice_category = 'NE', header_news =
+Post.objects.create(author_id = 1, type = 'NE', header_news =
 'Header for post3', post_text = 'Some text for post3')
 
-Post.objects.create(author_id = 1, choice_category = 'AR', header_news =
+Post.objects.create(author_id = 1, type = 'AR', header_news =
 'Header for post4', post_text = 'Some text for post4')
 --------------------------
 

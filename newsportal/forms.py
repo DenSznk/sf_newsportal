@@ -11,7 +11,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'category',
+            'tags',
             'header_news',
             'post_text',
         ]
@@ -25,7 +25,7 @@ class EditForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'category',
+            'tags',
             'header_news',
             'post_text',
         ]

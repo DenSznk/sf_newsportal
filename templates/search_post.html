@@ -31,7 +31,7 @@ Posts
            <tr>
                <td>{{ post.header_news }}</td>
                <td>{{ post.post_text | truncatewords:20 | censor }}</td>
-               <td>{{ post.choice_category }}</td>
+               <td>{{ post.type }}</td>
                <td>{{ post.date_time_auto| date:'M d Y' }}</td>
                <td>{{ post.author.user.username }}</td>
            </tr>
