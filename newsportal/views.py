@@ -1,14 +1,19 @@
 from datetime import datetime
 
-from allauth.account.views import login
-from allauth.socialaccount.providers.openid.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+    CreateView,
+    TemplateView,
+)
 
 from newsportal.filters import PostFilter
 from newsportal.forms import PostForm, EditForm
@@ -64,7 +69,6 @@ def create_post(request):
         if form.is_valid():
             form.save()
         return HttpResponseRedirect('/posts/')
-
     return render(request, 'post_edit.html', {'form': form})
 
 

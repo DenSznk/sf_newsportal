@@ -21,24 +21,24 @@ class Author(models.Model):
         self.save()
 
 
-class Category(models.Model):
-    category_name = models.CharField(max_length=155, unique=True)
+class Tag(models.Model):
+    name = models.CharField(max_length=155, unique=True)
 
     def __str__(self):
-        return self.category_name
+        return self.name
 
 
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    choice_category = models.CharField(max_length=2, choices=CATEGORY_NAME)
+    type = models.CharField(max_length=2, choices=CATEGORY_NAME)
     date_time_auto = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField(Category, through='PostCategory')
+    tags = models.ManyToManyField(Tag, through='PostCategory')
     header_news = models.CharField(max_length=155)
     post_text = models.TextField()
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.header_news}.  {self.post_text}, {self.category} '
+        return f'{self.header_news}.  {self.post_text}'
 
     def add_like(self):
         self.rating += 1
@@ -79,6 +79,4 @@ class Comment(models.Model):
 
 class PostCategory(models.Model):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-
+    category_id = models.ForeignKey(Tag, on_delete=models.CASCADE)
