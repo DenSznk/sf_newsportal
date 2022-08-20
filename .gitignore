@@ -2,5 +2,8 @@
 /shelf/
 /workspace.xml
 .idea/
-.env/
+.env
 .idea
+venv/
+__pycache__/
+.vscode/
