@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
@@ -22,6 +22,13 @@ from newsportal.models import Post, Author
 
 def index(request):
     return HttpResponse('<h1> main Page </h1>')
+
+
+# class CommentView(ListView):
+#     '''todo 1 доделать коменты'''
+#     model = Comment
+#     template_name = 'post.html'
+#     context_object_name = 'comments'
 
 
 class PostSearch(ListView):
@@ -83,6 +90,17 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'post_edit.html'
 
+    # def dispatch(self, request, *args, **kwargs):
+    #     obj = self.get_object()
+    #     # if obj.author != self.request.user or self.request.user != admin:
+    #     if request.user != is_superuser or obj.author != self.request.user:
+    #         raise Http404("Not for you dude")
+
+
+# obj = self.get_object()
+#         if obj.author != self.request.user and obj.author != request.user.is_superuser:
+#             raise Http404("You are not allowed to edit this Post")
+
 
 class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
@@ -96,9 +114,23 @@ class CreatePost(LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
+<<<<<<< HEAD
         obj = form.save(commit=False)
         obj.author_id = self.request.user.author.id
         obj.save()
+=======
+        if self.request.path == '/posts/create/article/':
+            post = form.save(commit=False)
+            post.choice_category = 'Article'
+            post.author = Author.objects.get(user=self.request.user)
+            post.save()
+        else:
+
+            post = form.save(commit=False)
+            post.choice_category = 'News'
+            post.author = Author.objects.get(user=self.request.user)
+            post.save()
+>>>>>>> 59971675b942009ef7dcd5889afc34b9c33f7db6
         return super().form_valid(form)
 
 
