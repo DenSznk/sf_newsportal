@@ -36,8 +36,8 @@ Posts
             <small><a href="{% url 'post_delete' post.pk %}">(Delete)</a></small></td>
           {% endif %}
         <td>
-            {% for pos in post.category.all %}
-                <p> {{ pos.category_name }} </p>
+            {% for name in post.category.all %}
+                <p> {{ name.category_name }} </p>
             {% endfor %}
         </td>
 

@@ -11,7 +11,6 @@
 {% block content %}
 
 
-
 <h3>Chapter: {{ post.choice_category}}. {{ post.date_time_auto | date:'M d Y' }}</h3>
 <h3></h3>
 <table>
@@ -25,17 +24,22 @@
     <tr>
         <td>{{ post.header_news| title }}</td>
         <td>{{ post.post_text| censor }}</td>
-        <td>{{ post.category.all }}</td>
+        <td>
+            {% for name in post.category.all %}
+            {{ name.category_name }}
+            {% endfor %}
+            {% if request.user.username == post.author.user.username %}
+            <small><a href="{% url 'post_edit' post.pk %}" class="btn btn-secondary">Edit</a></small>
+            <small><a href="{% url 'post_delete' post.pk %}" class="btn btn-secondary">Delete</a></small>
+            {% endif %}
+        </td>
         <td>{{ post.author.user.username }}</td>
 
     </tr>
 </table>
 
 <br/>
-{% if request.user.username == post.author.user.username %}
-<small><a href="{% url 'post_edit' post.pk %}" class="btn btn-secondary" >Edit</a></small>
-<small><a href="{% url 'post_delete' post.pk %}" class="btn btn-secondary">Delete</a></small>
-{% endif %}
+
 <a href="{% url 'home' %}" class="btn btn-secondary">
     Back</a>
-    {% endblock content %}
+{% endblock content %}
