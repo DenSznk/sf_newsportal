@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView, C
 
 from newsportal.filters import PostFilter
 from newsportal.forms import PostForm, EditForm
-from newsportal.models import Post, Author
+from newsportal.models import Category, Post, Author, UserCategory
 
 
 def index(request):
@@ -61,12 +61,7 @@ class PostDetails(DetailView):
         is_subscriber = False
         context['time_now'] = datetime.utcnow()
         context['New posts is coming soon'] = None
-        for cat in category:
-            if self.request.user in cat.subscribers.all():
-                is_subscriber = True
-                break
-        context['subscribers'] = is_subscriber
-
+        context['subscriptions'] = self.request.user.subscriptions.all().values_list('category_id', flat=True)
         return context
 
 
@@ -123,11 +118,12 @@ def upgrade_me(request):
 
 @login_required
 def subscribe(request, **kwargs):
-    post = Post.objects.get(pk=kwargs['pk'])
-    user = request.user
-    for category in post.category.all():
-        if user not in category.subscribers.all():
-            category.subscribers.add(user)
-        else:
-            category.subscribers.remove(user)
+    # TODO: при IntegrityError выдавать всплывающее сообщение о том, что пользователь уже подписан
+    UserCategory.objects.create(user_id=request.user.id, category_id=kwargs.get('pk'))
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+
+@login_required
+def unsubscribe(request, **kwargs):
+    UserCategory.objects.filter(user_id=request.user.id, category_id=kwargs.get('pk')).delete()
     return redirect(request.META.get('HTTP_REFERER', 'home'))
