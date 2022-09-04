@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
+from django.core.mail import send_mail
+
+from django.conf import settings
+
 
 from newsportal.resources import CATEGORY_NAME
 
@@ -27,11 +31,14 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
+    def is_user_subscribed(self, user_id: int) -> bool:
+        return self.subscribers.filter(id=user_id).exists()
+
     def get_subscribers_emails(self):
-        result = set()
-        for user in self.subscribers.all():
-            result.add(user.email)
-        return result
+        # result = set()
+        # for user in self.subscribers.all():
+        #     result.add(user.email)
+        return self.subscribers.all().values_list('user__email', flat=True)
 
 
 class Post(models.Model):
@@ -60,7 +67,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return f'{self.header_news}.  {self.post_text}'
+        return f'{self.header_news}. {self.post_text}'
 
     def add_like(self):
         self.rating += 1
@@ -78,6 +85,13 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return f'/posts/{self.id}'
+
+    def save(self, *args, **kwargs):
+        saved_obj = super().save(*args, **kwargs)
+        
+        # проверить если пост создаётся (self.pk == None - значит создаётся)
+        # отправить письмо с содержанием заголовка создался новый пост в категори тра ля ля
+        return saved_obj
 
 
 class Comment(models.Model):
@@ -99,9 +113,28 @@ class Comment(models.Model):
         self.save()
 
 
+# TODO переименовать в subscription
 class UserCategory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs) -> None:
+        saved_object = super().save(*args, **kwargs)
+
+        send_mail(
+            subject=f'Подписка новости {self.category.category_name}',
+            message='Спасибо что подписались на новости по теме....',
+            recipient_list=[self.user.email],
+            from_email=settings.EMAIL_FROM,
+        )
+
+        return saved_object
+        
+
+    class Meta:
+        unique_together = (
+            ('user', 'category'),
+        )
 
 
 class PostCategory(models.Model):
