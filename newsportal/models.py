@@ -27,15 +27,37 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
+    def get_subscribers_emails(self):
+        result = set()
+        for user in self.subscribers.all():
+            result.add(user.email)
+        return result
+
 
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    choice_category = models.CharField(max_length=2, choices=CATEGORY_NAME)
-    date_time_auto = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField(Category, through='PostCategory', verbose_name='Categories')
-    header_news = models.CharField(max_length=155)
+    author = models.ForeignKey(
+        Author,
+        on_delete=models.CASCADE
+    )
+    choice_category = models.CharField(
+        max_length=2,
+        choices=CATEGORY_NAME
+    )
+    date_time_auto = models.DateTimeField(
+        auto_now_add=True
+    )
+    category = models.ManyToManyField(
+        Category,
+        through='PostCategory',
+        verbose_name='Categories'
+    )
+    header_news = models.CharField(
+        max_length=155
+    )
     post_text = models.TextField()
-    rating = models.IntegerField(default=0)
+    rating = models.IntegerField(
+        default=0
+    )
 
     def __str__(self):
         return f'{self.header_news}.  {self.post_text}'

@@ -1,12 +1,9 @@
 from datetime import datetime
-from django.http import Http404
-from allauth.account.views import login
-from allauth.socialaccount.providers.openid.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group, User
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.contrib.auth.models import Group
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
 
@@ -57,39 +54,26 @@ class PostDetails(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self,
+                         **kwargs):
         context = super().get_context_data(**kwargs)
+        category = self.object.category.all()
+        is_subscriber = False
         context['time_now'] = datetime.utcnow()
         context['New posts is coming soon'] = None
+        for cat in category:
+            if self.request.user in cat.subscribers.all():
+                is_subscriber = True
+                break
+        context['subscribers'] = is_subscriber
+
         return context
-
-
-def create_post(request):
-    form = PostForm()
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return HttpResponseRedirect('/posts/')
-
-    return render(request, 'post_edit.html', {'form': form})
 
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
     form_class = EditForm
     model = Post
     template_name = 'post_edit.html'
-
-    # def dispatch(self, request, *args, **kwargs):
-    #     obj = self.get_object()
-    #     # if obj.author != self.request.user or self.request.user != admin:
-    #     if request.user != is_superuser or obj.author != self.request.user:
-    #         raise Http404("Not for you dude")
-
-
-# obj = self.get_object()
-#         if obj.author != self.request.user and obj.author != request.user.is_superuser:
-#             raise Http404("You are not allowed to edit this Post")
 
 
 class PostDelete(LoginRequiredMixin, DeleteView):
@@ -102,6 +86,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'post_edit.html'
+    permission_required = ('post.add_post')
 
     def form_valid(self, form):
         if self.request.path == '/posts/create/article/':
@@ -133,4 +118,16 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='authors').exists():
         author_group.user_set.add(user)
         Author.objects.create(user=user)
-    return redirect('/')
+    return redirect('/posts/')
+
+
+@login_required
+def subscribe(request, **kwargs):
+    post = Post.objects.get(pk=kwargs['pk'])
+    user = request.user
+    for category in post.category.all():
+        if user not in category.subscribers.all():
+            category.subscribers.add(user)
+        else:
+            category.subscribers.remove(user)
+    return redirect(request.META.get('HTTP_REFERER', 'home'))

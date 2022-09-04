@@ -22,7 +22,7 @@
         <td><h3>Author</h3></td>
     </tr>
     <tr>
-        <td>{{ post.header_news| title }}</td>
+        <td>{{ x| title }}</td>
         <td>{{ post.post_text| censor }}</td>
         <td>
             {% for name in post.category.all %}
@@ -35,11 +35,23 @@
         </td>
         <td>{{ post.author.user.username }}</td>
 
+
     </tr>
 </table>
 
 <br/>
+{% if request.user.is_authenticated %}
+{% csrf_token %}
 
+            {% if not subscribers %}
+                 <p>Subscribe to news:
+                <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Subscribe</a></p>
+            {% else %}
+                 <p>Unsubscribe to news:
+               <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Unsubscribe</a></p>
+            {%endif%}
+
+{% endif %}
 <a href="{% url 'home' %}" class="btn btn-secondary">
     Back</a>
 {% endblock content %}

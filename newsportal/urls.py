@@ -1,7 +1,7 @@
 from allauth.account.views import LoginView, LogoutView
 from django.urls import path
 from .views import PostListView, PostDetails, \
-    PostUpdate, PostDelete, CreatePost, PostSearch, upgrade_me
+    PostUpdate, PostDelete, CreatePost, PostSearch, upgrade_me, subscribe
 
 urlpatterns = [
     path('', PostListView.as_view(), name='home'),
@@ -18,4 +18,9 @@ urlpatterns = [
     path('upgrade/', upgrade_me, name='upgrade'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+
+    path('subscribe/<int:pk>', subscribe, name='subscribe'),
+
 ]
+
+

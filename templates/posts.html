@@ -47,16 +47,18 @@ Posts
     {% endfor %}
 
 
+        {% if is_not_author %}
+            <li class="nav-item"><a class="nav-link "  href="newsportal: uprgrade_me"> Upgrade ME! </a> </li>>
+        {% endif %}
 
 </table>
 {% else %}
 <h2>No posts yet.</h2>
 {% endif %}
 
-
-{% if page_obj.has_previous %}
-<a href="?page=1">1</a>
-{% if page_obj.previous_page_number != 1 %}
+    {% if page_obj.has_previous %}
+        <a href="?page=1">1</a>
+    {% if page_obj.previous_page_number != 1 %}
 ...
 <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
 {% endif %}

@@ -14,12 +14,10 @@ class PostForm(forms.ModelForm):
             'category',
             'header_news',
             'post_text',
-            # 'author',
         ]
         widgets = {
             'header_news': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input Header'}),
             'post_text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Input Post'}),
-            # 'author': forms.Select(),
         }
 
 
@@ -52,7 +50,6 @@ class BasicSignupForm(SignupForm):
         user = super(BasicSignupForm, self).save(request)
         common_group = Group.objects.get(name='common')
         common_group.user_set.add(user)
-        Author.objects.create(user=user, rating=0)
         return user
 
 
