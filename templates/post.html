@@ -25,8 +25,18 @@
         <td>{{ x| title }}</td>
         <td>{{ post.post_text| censor }}</td>
         <td>
-            {% for name in post.category.all %}
-            {{ name.category_name }}
+            {% for category in post.category.all %}
+                {{ category.category_name }}
+                {% if category.id not in subscriptions %}
+                    <a href="/posts/subscribe/{{ category.id }}" class="btn btn-secondary">
+                        Subscribe to {{ category.category_name }} news
+                    </a>
+                {% else %}
+                    <a href="/posts/unsubscribe/{{ category.id }}" class="btn btn-secondary">
+                        Unsubscribe to {{ category.category_name }} news
+                    </a>
+                {% endif %}
+            </p>
             {% endfor %}
             {% if request.user.username == post.author.user.username %}
             <small><a href="{% url 'post_edit' post.pk %}" class="btn btn-secondary">Edit</a></small>
@@ -42,14 +52,6 @@
 <br/>
 {% if request.user.is_authenticated %}
 {% csrf_token %}
-
-            {% if not subscribers %}
-                 <p>Subscribe to news:
-                <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Subscribe</a></p>
-            {% else %}
-                 <p>Unsubscribe to news:
-               <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Unsubscribe</a></p>
-            {%endif%}
 
 {% endif %}
 <a href="{% url 'home' %}" class="btn btn-secondary">
