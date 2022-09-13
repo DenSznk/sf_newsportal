@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +33,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django_filters',
+
     'newsportal',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -160,3 +164,9 @@ EMAIL_USE_SSL = True
 EMAIL_FROM = 'densznk@gmail.com'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + "@gmail.com"
+
+CELERY_BROKER_URL = 'redis://:uijgekNIV0fMuhR7lT2fgXyJIaIXNAsk@redis-15160.c239.us-east-1-2.ec2.cloud.redislabs.com:15160'
+CELERY_RESULT_BACKEND = 'redis://:uijgekNIV0fMuhR7lT2fgXyJIaIXNAsk@redis-15160.c239.us-east-1-2.ec2.cloud.redislabs.com:15160'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
