@@ -1,11 +1,15 @@
 {% extends 'newsportal/default.html' %}
 
+
 {% block content %}
 <h1>Delete Post</h1>
 <hr>
 <form action="" method="post">
     {% csrf_token %}
-    <p>Are you sure? "{{ object.name }}" will be deleted.</p>
-    <input type="submit" value="Delete" />
+    {{ object.header_news }}<br><br>
+    <p>Are you sure? "{{ object.header_news }}" will be deleted!</p>
+    <input type="submit" value="Delete" class="btn btn-secondary" />
+    <a href="{% url 'home' %}" class="btn btn-secondary">
+    Back</a>
 </form>
 {% endblock content %}

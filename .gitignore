@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+.idea/
+.env
+.idea
+venv/
+__pycache__/
+__pycache__
+.vscode/
+.DS_Store/
+.DS_Store

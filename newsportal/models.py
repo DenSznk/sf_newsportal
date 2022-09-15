@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
-from django.urls import reverse
 
 from newsportal.resources import CATEGORY_NAME
 
@@ -23,22 +22,45 @@ class Author(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=155, unique=True)
+    subscribers = models.ManyToManyField(User, through='UserCategory')
 
     def __str__(self):
         return self.category_name
 
+    def get_subscribers_emails(self):
+        result = set()
+        for user in self.subscribers.all():
+            result.add(user.email)
+        return result
+
 
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    choice_category = models.CharField(max_length=2, choices=CATEGORY_NAME)
-    date_time_auto = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField(Category, through='PostCategory')
-    header_news = models.CharField(max_length=155)
+    author = models.ForeignKey(
+        Author,
+        on_delete=models.CASCADE
+    )
+    choice_category = models.CharField(
+        max_length=2,
+        choices=CATEGORY_NAME
+    )
+    date_time_auto = models.DateTimeField(
+        auto_now_add=True
+    )
+    category = models.ManyToManyField(
+        Category,
+        through='PostCategory',
+        verbose_name='Categories'
+    )
+    header_news = models.CharField(
+        max_length=155
+    )
     post_text = models.TextField()
-    rating = models.IntegerField(default=0)
+    rating = models.IntegerField(
+        default=0
+    )
 
     def __str__(self):
-        return f'{self.header_news}.  {self.post_text} '
+        return f'{self.header_news}.  {self.post_text}'
 
     def add_like(self):
         self.rating += 1
@@ -55,7 +77,7 @@ class Post(models.Model):
         return preview
 
     def get_absolute_url(self):
-        return reverse('post_list')
+        return f'/posts/{self.id}'
 
 
 class Comment(models.Model):
@@ -75,6 +97,11 @@ class Comment(models.Model):
     def add_dislike(self):
         self.comment_rating -= 1
         self.save()
+
+
+class UserCategory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
 class PostCategory(models.Model):

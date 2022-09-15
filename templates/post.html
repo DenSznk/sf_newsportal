@@ -1,28 +1,57 @@
 {% extends 'newsportal/default.html' %}
 {% load poll_extras %}
+
+
 {% block title %}
-Post
+{{ post.header_news }}
+
 {% endblock title %}
+
+
 {% block content %}
 
-<h1> Post: </h1>
-<hr>
-<h3>{{ time_now|date:'M d Y' }}</h3>
+
+<h3>Chapter: {{ post.choice_category}}. {{ post.date_time_auto | date:'M d Y' }}</h3>
+<h3></h3>
 <table>
+
     <tr>
         <td><h3>Header</h3></td>
-        <td><h3>Date</h3></td>
         <td><h3>Description</h3></td>
         <td><h3>Category</h3></td>
         <td><h3>Author</h3></td>
     </tr>
     <tr>
-        <td><h3>{{ post.header_news| upper }}</h3></td>
-        <td><h3>{{ post.date_time_auto| date:'M d Y' }}</h3></td>
+        <td>{{ x| title }}</td>
         <td>{{ post.post_text| censor }}</td>
-        <td><h3>{{ post.choice_category }}</h3></td>
-        <td><h3>{{ post.author.user.username }}</h3></td>
+        <td>
+            {% for name in post.category.all %}
+            {{ name.category_name }}
+            {% endfor %}
+            {% if request.user.username == post.author.user.username %}
+            <small><a href="{% url 'post_edit' post.pk %}" class="btn btn-secondary">Edit</a></small>
+            <small><a href="{% url 'post_delete' post.pk %}" class="btn btn-secondary">Delete</a></small>
+            {% endif %}
+        </td>
+        <td>{{ post.author.user.username }}</td>
+
+
     </tr>
 </table>
 
-    {% endblock content %}
+<br/>
+{% if request.user.is_authenticated %}
+{% csrf_token %}
+
+            {% if not subscribers %}
+                 <p>Subscribe to news:
+                <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Subscribe</a></p>
+            {% else %}
+                 <p>Unsubscribe to news:
+               <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Unsubscribe</a></p>
+            {%endif%}
+
+{% endif %}
+<a href="{% url 'home' %}" class="btn btn-secondary">
+    Back</a>
+{% endblock content %}

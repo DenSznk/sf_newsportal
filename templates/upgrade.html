@@ -1,0 +1,15 @@
+{% extends 'newsportal/default.html' %}
+{% load poll_extras %}
+
+
+{% block title %}
+{{  }}
+
+{% endblock title %}
+{% block content %}
+    {% if is_not_authors %}
+        <button> <a href="upgrade/"> Upgrade yo Author </a> </button>
+    {% endif %}
+<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
+
+{% endblock %}

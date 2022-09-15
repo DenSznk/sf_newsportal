@@ -1,22 +1,26 @@
 from datetime import datetime
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.contrib.auth.models import Group
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, TemplateView
 
 from newsportal.filters import PostFilter
-from newsportal.forms import PostForm, SearchForm
-from newsportal.models import Post
+from newsportal.forms import PostForm, EditForm
+from newsportal.models import Post, Author
 
 
 def index(request):
     return HttpResponse('<h1> main Page </h1>')
 
 
-def logging(request):
-    return HttpResponse('<h1> Log here bitch</h1>')
+# class CommentView(ListView):
+#     '''todo 1 доделать коменты'''
+#     model = Comment
+#     template_name = 'post.html'
+#     context_object_name = 'comments'
 
 
 class PostSearch(ListView):
@@ -50,46 +54,80 @@ class PostDetails(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self,
+                         **kwargs):
         context = super().get_context_data(**kwargs)
+        category = self.object.category.all()
+        is_subscriber = False
         context['time_now'] = datetime.utcnow()
         context['New posts is coming soon'] = None
+        for cat in category:
+            if self.request.user in cat.subscribers.all():
+                is_subscriber = True
+                break
+        context['subscribers'] = is_subscriber
+
         return context
 
 
-def create_post(request):
-    form = PostForm()
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return HttpResponseRedirect('/posts/')
-
-    return render(request, 'post_edit.html', {'form': form})
-
-
 class PostUpdate(LoginRequiredMixin, UpdateView):
-    form_class = PostForm
+    form_class = EditForm
     model = Post
     template_name = 'post_edit.html'
 
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('post_create')
+    success_url = reverse_lazy('home')
 
 
-class CreatePost(CreateView):
-    form_class = PostForm
+class CreatePost(LoginRequiredMixin, CreateView):
     model = Post
+    form_class = PostForm
     template_name = 'post_edit.html'
+    permission_required = ('post.add_post')
 
     def form_valid(self, form):
         if self.request.path == '/posts/create/article/':
             post = form.save(commit=False)
             post.choice_category = 'AR'
+            post.author = Author.objects.get(user=self.request.user)
+            post.save()
         else:
             post = form.save(commit=False)
             post.choice_category = 'NE'
+            post.author = Author.objects.get(user=self.request.user)
+            post.save()
         return super().form_valid(form)
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'newsportal/posts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    author_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        author_group.user_set.add(user)
+        Author.objects.create(user=user)
+    return redirect('/posts/')
+
+
+@login_required
+def subscribe(request, **kwargs):
+    post = Post.objects.get(pk=kwargs['pk'])
+    user = request.user
+    for category in post.category.all():
+        if user not in category.subscribers.all():
+            category.subscribers.add(user)
+        else:
+            category.subscribers.remove(user)
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
