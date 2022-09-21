@@ -165,3 +165,9 @@ EMAIL_FROM = 'densznk@gmail.com'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + "@gmail.com"
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+CELERY_BROKER_URL = 'redis://:uijgekNIV0fMuhR7lT2fgXyJIaIXNAsk@redis-15160.c239.us-east-1-2.ec2.cloud.redislabs.com:15160'
+CELERY_RESULT_BACKEND = 'redis://:uijgekNIV0fMuhR7lT2fgXyJIaIXNAsk@redis-15160.c239.us-east-1-2.ec2.cloud.redislabs.com:15160'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

@@ -11,7 +11,7 @@
 {% block content %}
 
 
-<h3>Chapter: {{ post.choice_category}}. {{ post.date_time_auto | date:'M d Y' }}</h3>
+<h3>{{ post.date_time_auto | date:'M d Y' }}</h3>
 <h3></h3>
 <table>
 
@@ -44,10 +44,10 @@
 {% csrf_token %}
 
             {% if not subscribers %}
-                 <p>Subscribe to news:
+                 <p>Subscribe to category:
                 <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Subscribe</a></p>
             {% else %}
-                 <p>Unsubscribe to news:
+                 <p>Unsubscribe to category:
                <a href="/posts/subscribe/{{ post.id }}" class="btn btn-secondary">Unsubscribe</a></p>
             {%endif%}
 
