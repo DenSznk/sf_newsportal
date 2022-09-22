@@ -19,10 +19,10 @@ def notify_subscribers(instance, action,  *args, **kwargs):
         ]
         for email in users_emails:
             user = User.objects.get(email=email)
-            html_content = render_to_string('weekly_spam.html', {'post_mail': instance}, )
+            html_content = render_to_string('account/email/notify_user.html', {'post_detail': instance}, )
 
-            subject = f'"Здравствуй, {user.username}. Новая статья в твоём любимом разделе(celery)!"' \
-                      f'{instance.header_news}'
+            subject = f'Hello {user.username} a lot of spam is waiting for you '
+
             from_email = settings.EMAIL_FROM
             notify_subscriber_celery.delay(subject, from_email, email, html_content)
 

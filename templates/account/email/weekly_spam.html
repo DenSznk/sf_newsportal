@@ -1,0 +1,21 @@
+
+<body>
+ Weekly notification in
+            {% for name in post.category.all %}
+                <p> {{ name.category_name }} </p>
+            {% endfor %}
+
+<br>
+    {% for post in posts %}
+    {% if category in post.category.all%}
+<br>
+    <a href="http://127.0.0.1:8000{% url 'post_detail' post_detail.id %}">Open post</a>
+    <br>
+<br>
+    <i>{{post.post_text|truncatechars:50}}</i>
+    <br>
+    {% endif %}
+    {% endfor %}
+
+
+</body>

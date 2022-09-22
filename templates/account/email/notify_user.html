@@ -3,6 +3,6 @@
 
 
 
-Hello, {{ username }}. New post in your favorite category!
+Hello, {{ username }} New post in your favorite category!
 {{ single_news.text_content|truncatechars:50 }}
 <a href="http://127.0.0.1:8000{% url 'post_detail' post_detail.id %}">Open post</a>
