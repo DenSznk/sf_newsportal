@@ -28,7 +28,7 @@ class PostSearch(ListView):
     ordering = '-rating'
     template_name = 'search_post.html'
     context_object_name = 'posts'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()

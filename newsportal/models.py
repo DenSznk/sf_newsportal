@@ -71,7 +71,7 @@ class Post(models.Model):
         self.save()
 
     def get_preview(self):
-        preview = f"{self.post_text[:124]}"
+        preview = f'{self.post_text[:124]}'
         if len(preview) > 124:
             preview += '...'
         return preview
